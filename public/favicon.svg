@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <!-- Background -->
+  <rect width="180" height="180" fill="#0a0a0f" rx="40"/>
+
+  <!-- Neon glow effect -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Text "DV" -->
+  <text
+    x="90"
+    y="110"
+    font-family="system-ui, -apple-system, sans-serif"
+    font-size="90"
+    font-weight="900"
+    fill="#00FF88"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    filter="url(#glow)"
+    letter-spacing="-5"
+  >DV</text>
+</svg>
