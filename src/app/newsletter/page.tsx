@@ -80,7 +80,7 @@ export default function NewsletterPage() {
             title="La primera edición está en producción"
             description="Estamos preparando la primera edición del newsletter. Suscríbete arriba con tu email o inicia sesión con Google para recibir una notificación cuando salga."
             emoji="📝"
-            eta="Junio 2026"
+            eta="Proximamente"
             notifyLabel="Notifícame cuando salga la primera edición"
             redirectTo="/newsletter"
           />

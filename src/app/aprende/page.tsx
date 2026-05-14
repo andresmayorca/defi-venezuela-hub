@@ -140,7 +140,7 @@ export default function AprendePage() {
             title="Los tracks están en producción"
             description="Estamos creando el contenido con la máxima calidad para el contexto venezolano. Entérate en cuanto estén listos."
             emoji="🎓"
-            eta="Agosto 2026"
+            eta="Proximamente"
             notifyLabel="Notifícame cuando lancemos los primeros tracks"
             redirectTo="/aprende"
           />

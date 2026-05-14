@@ -40,7 +40,7 @@ export default function EventosPage() {
           title="Los primeros eventos ya se están organizando"
           description="Estamos coordinando hackathons, workshops y meetups para la comunidad venezolana. Entérate en cuanto anunciemos el primero."
           emoji="📅"
-          eta="Junio 2026"
+          eta="Proximamente"
           notifyLabel="Notifícame cuando anunciemos el primer evento"
           redirectTo="/eventos"
         />

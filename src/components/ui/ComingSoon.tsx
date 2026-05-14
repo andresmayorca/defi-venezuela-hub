@@ -25,8 +25,7 @@ export default function ComingSoon({
       {/* Badge */}
       <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00FF88]/30 bg-[#00FF88]/8 text-[#00FF88] text-xs font-semibold tracking-widest uppercase mb-6">
         <Clock className="w-3 h-3" />
-        Próximamente
-        {eta && <span className="opacity-60">· {eta}</span>}
+        {eta && eta !== "Proximamente" ? eta : "Próximamente"}
       </div>
 
       {/* Emoji */}

@@ -28,7 +28,7 @@ export default function BlogPage() {
           title="El blog está en camino"
           description="Pronto publicaremos artículos sobre DeFi, Web3, agentes de IA y casos de uso concretos para venezolanos. Sé el primero en enterarte."
           emoji="✍️"
-          eta="Julio 2026"
+          eta="Proximamente"
           notifyLabel="Notifícame cuando publiquemos el primer artículo"
           redirectTo="/blog"
         />
