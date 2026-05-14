@@ -22,7 +22,7 @@ export default function NotFound() {
         </p>
 
         <p className="text-[#9DA5B4]/50 mb-8 leading-relaxed">
-          Parece que te perdiste en el espacio cripto. No encontramos lo que buscabas, pero el ecosistema DeFi sigue aquí esperándote.
+          Para que te perdiste en el espacio Venezolano, no encontramos lo que buscabas, pero el ecosistema DeFi sigue aquí esperándote.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
