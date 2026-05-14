@@ -1,29 +1,20 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    const authHeader = request.headers.get("authorization") ?? "";
-    const [scheme, encoded] = authHeader.split(" ");
+  const { pathname } = request.nextUrl;
 
-    if (scheme !== "Basic" || !encoded) {
-      return new NextResponse("Acceso denegado", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Admin DeFi Venezuela"' },
-      });
-    }
+  if (pathname === "/admin/login" || pathname.startsWith("/api/admin/login")) {
+    return NextResponse.next();
+  }
 
-    const decoded = Buffer.from(encoded, "base64").toString("utf-8");
-    const [user, pass] = decoded.split(":");
+  const expectedToken = Buffer.from(
+    `${process.env.ADMIN_USER}:${process.env.ADMIN_PASSWORD}`
+  ).toString("base64");
 
-    const validUser = process.env.ADMIN_USER;
-    const validPass = process.env.ADMIN_PASSWORD;
+  const sessionCookie = request.cookies.get("admin_session")?.value;
 
-    if (user !== validUser || pass !== validPass) {
-      return new NextResponse("Credenciales incorrectas", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Admin DeFi Venezuela"' },
-      });
-    }
+  if (sessionCookie !== expectedToken) {
+    return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
   return NextResponse.next();

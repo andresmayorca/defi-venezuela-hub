@@ -22,8 +22,8 @@ export async function POST(request: NextRequest) {
 
     // Send to admin
     await resend.emails.send({
-      from: "contacto@defivenezuela.com",
-      to: process.env.ADMIN_EMAIL || "contacto@defivenezuela.com",
+      from: "test@resend.dev",
+      to: process.env.ADMIN_EMAIL || "andresmayorcaa@gmail.com",
       subject: `Nuevo contacto: ${subject}`,
       html: `
         <h2>Nuevo mensaje de contacto</h2>
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     // Send confirmation to user
     await resend.emails.send({
-      from: "contacto@defivenezuela.com",
+      from: "test@resend.dev",
       to: email,
       subject: "Hemos recibido tu mensaje — DefiVenezuela",
       html: `

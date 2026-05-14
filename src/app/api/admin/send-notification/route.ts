@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     // Enviar emails con Resend
     const { data: sendData, error: sendError } = await getResend().emails.send({
-      from: "DeFi Venezuela <noreply@defivenezuela.com>",
+      from: "DeFi Venezuela <test@resend.dev>",
       to: emails,
       subject: `🇻🇪 Nuevo en DeFi Venezuela: ${title}`,
       html: `

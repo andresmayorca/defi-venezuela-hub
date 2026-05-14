@@ -295,13 +295,13 @@ export default function ComunidadesPage() {
             </h2>
             <p className="text-[#9DA5B4]/60 mb-6 text-sm leading-relaxed">
               Si lideras una comunidad activa de venezolanos en Web3, queremos incluirte aquí.
-              Escríbenos y la añadimos al directorio.
+              Rellena nuestro formulario y la añadimos al directorio.
             </p>
             <Button asChild>
-              <a href="mailto:contacto@defivenezuela.com" className="flex items-center gap-2 justify-center">
+              <Link href="/comunidades/proponer-mi-comunidad" className="flex items-center gap-2 justify-center">
                 Proponer mi comunidad
                 <ChevronRight className="w-4 h-4" />
-              </a>
+              </Link>
             </Button>
           </div>
         </div>

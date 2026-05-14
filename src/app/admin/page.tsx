@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { FileText, Wrench, Briefcase, Calendar, Bot, GraduationCap, Users, ArrowRight } from "lucide-react";
+import { FileText, Wrench, Briefcase, Calendar, Bot, GraduationCap, Users, ArrowRight, Mail, Sparkles } from "lucide-react";
 
 const sections = [
+  { href: "/admin/ai-content", label: "IA Content", icon: Sparkles, desc: "Genera con inteligencia artificial", color: "text-purple-400 bg-purple-400/10" },
+  { href: "/admin/newsletters", label: "Newsletters", icon: Mail, desc: "Gestionar y enviar", color: "text-red-400 bg-red-400/10" },
   { href: "/admin/blog", label: "Blog", icon: FileText, desc: "Artículos y posts", color: "text-blue-400 bg-blue-400/10" },
   { href: "/admin/herramientas", label: "Herramientas", icon: Wrench, desc: "Herramientas y servicios", color: "text-[#00FF88] bg-[#00FF88]/10" },
   { href: "/admin/empleos", label: "Empleos", icon: Briefcase, desc: "Ofertas Web3", color: "text-yellow-400 bg-yellow-400/10" },

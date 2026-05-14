@@ -35,7 +35,7 @@ export default function RootLayout({
       <head>
         {/* <Analytics /> TODO: Uncomment when GA_ID is configured */}
       </head>
-      <body className="min-h-full flex flex-col bg-[#0D1117] text-[#9DA5B4]">
+      <body className="min-h-full flex flex-col bg-[#0D1117] text-[#9DA5B4]" suppressHydrationWarning>
         <Navbar />
         <main className="flex-1 pt-16">{children}</main>
         <Footer />

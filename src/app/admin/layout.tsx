@@ -1,10 +1,12 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { Zap, LayoutDashboard, FileText, Wrench, Briefcase, Calendar, Bot, GraduationCap, LogOut } from "lucide-react";
+import { Zap, LayoutDashboard, FileText, Wrench, Briefcase, Calendar, Bot, GraduationCap, Sparkles } from "lucide-react";
+import LogoutButton from "./LogoutButton";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/admin/ai-content", label: "IA Content", icon: Sparkles },
   { href: "/admin/blog", label: "Blog", icon: FileText },
   { href: "/admin/herramientas", label: "Herramientas", icon: Wrench },
   { href: "/admin/empleos", label: "Empleos", icon: Briefcase },
@@ -39,13 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         <div className="border-t border-white/5 pt-4 pb-6 px-2">
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-[#9DA5B4]/60 hover:text-red-400 hover:bg-red-400/5 transition-all"
-          >
-            <LogOut className="w-4 h-4" />
-            Salir
-          </Link>
+          <LogoutButton />
         </div>
       </aside>
 

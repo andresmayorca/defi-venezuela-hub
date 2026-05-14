@@ -41,7 +41,7 @@ export async function POST(request: Request) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://defivenezuela.com";
 
   const { data, error } = await getResend().emails.send({
-    from: "DeFi Venezuela <noreply@defivenezuela.com>",
+    from: "DeFi Venezuela <test@resend.dev>",
     to: emails,
     subject: `🇻🇪 Nuevo en DeFi Venezuela: ${title}`,
     html: `

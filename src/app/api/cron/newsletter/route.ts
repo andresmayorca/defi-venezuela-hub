@@ -109,9 +109,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Notificar al admin por email que hay un nuevo draft
-    const adminEmail = process.env.ADMIN_EMAIL || "admin@defivenezuela.com";
+    const adminEmail = process.env.ADMIN_EMAIL || "andresmayorcaa@gmail.com";
     const { error: emailError } = await getResend().emails.send({
-      from: "DeFi Venezuela <noreply@defivenezuela.com>",
+      from: "DeFi Venezuela <test@resend.dev>",
       to: adminEmail,
       subject: `[ADMIN] Newsletter #${nextIssueNumber} lista para revisar`,
       html: `
