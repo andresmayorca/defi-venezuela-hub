@@ -42,7 +42,7 @@ export default function BlogGenerator() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Error al generar blog");
+        setError(data.error || data.details || "Error al generar blog");
         setState("idle");
         return;
       }

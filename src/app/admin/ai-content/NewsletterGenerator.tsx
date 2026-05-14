@@ -38,7 +38,7 @@ export default function NewsletterGenerator() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Error al generar newsletter");
+        setError(data.error || data.details || "Error al generar newsletter");
         setState("idle");
         return;
       }

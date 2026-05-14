@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Anthropic from "@anthropic-ai/sdk";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,14 +19,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
-        { error: "GEMINI_API_KEY no está configurado" },
+        { error: "ANTHROPIC_API_KEY no está configurado" },
         { status: 500 }
       );
     }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     let prompt = "";
 
@@ -76,16 +74,20 @@ Incluir el logo "DefiVenezuela" al inicio y un footer al final.`;
       );
     }
 
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    const message = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 4096,
+      messages: [{ role: "user", content: prompt }],
+    });
 
-    // Intentar parsear el JSON de la respuesta
+    const responseText =
+      message.content[0].type === "text" ? message.content[0].text : "";
+
     let parsedContent: any;
 
     try {
       parsedContent = JSON.parse(responseText);
     } catch {
-      // Si no es JSON válido, intentar extraer JSON del texto
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
         throw new Error("No se pudo parsear la respuesta de IA como JSON");
@@ -93,12 +95,17 @@ Incluir el logo "DefiVenezuela" al inicio y un footer al final.`;
       parsedContent = JSON.parse(jsonMatch[0]);
     }
 
-    return NextResponse.json({
-      success: true,
-      content: parsedContent,
-    });
-  } catch (error) {
+    return NextResponse.json({ success: true, content: parsedContent });
+  } catch (error: any) {
     console.error("Error en ai-generate:", error);
+
+    if (error?.status === 429) {
+      return NextResponse.json(
+        { error: "Límite de Claude API alcanzado. Intenta de nuevo en unos minutos." },
+        { status: 429 }
+      );
+    }
+
     return NextResponse.json(
       {
         error: "Error al generar contenido",
