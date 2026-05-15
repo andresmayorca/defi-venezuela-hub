@@ -1,496 +1,400 @@
-import { Metadata } from "next";
+"use client";
 import Link from "next/link";
+import { useState } from "react";
 import {
-  ArrowRight, BookOpen, Bot, Wrench, Users, Newspaper,
-  ChevronRight, TrendingUp, Shield, Globe, Zap, Calendar, Briefcase,
+  ArrowRight, Users, Calendar, Briefcase, BookOpen, Mail,
+  BarChart3, Trophy, Rocket, Zap, Sparkles, Bot, Globe, Shield, Wrench,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Badge } from "@/components/ui/Badge";
+import { GlassCard } from "@/components/ui/GlassCard";
+import { ScrambleText } from "@/components/ui/ScrambleText";
+import { FadeIn, SlideUp, StaggerContainer, StaggerItem } from "@/components/ui/motion";
+import { toast } from "sonner";
 
-export const metadata: Metadata = {
-  title: "DefiVenezuela | Hub de educación, comunidad y herramientas Web3",
-  description: "El hub de educación, comunidad y herramientas para venezolanos en Web3. Aprende DeFi, construye con IA agéntica, accede a empleos remoto en cripto.",
-  keywords: ["DeFi", "blockchain", "Web3", "Venezuela", "cripto", "IA", "finanzas descentralizadas"],
-  openGraph: {
-    title: "DefiVenezuela — Hub Web3 para venezolanos",
-    description: "Educación, comunidad y herramientas DeFi 100% en español",
-    type: "website",
-    url: "https://defivenezuela.com",
-    images: [
-      {
-        url: "https://defivenezuela.com/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "DefiVenezuela",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "DefiVenezuela",
-    description: "Educación, comunidad y herramientas Web3 para venezolanos",
-  },
-};
-
-const tracks = [
+/* ── Ecosystem module cards ─────────────────────────────────────────── */
+const modules = [
   {
-    icon: "⛓️",
-    title: "Blockchain Básico",
-    description: "Entiende cómo funciona la tecnología que está cambiando el mundo. Sin tecnicismos.",
-    lessons: 8,
-    level: "Principiante",
-    href: "/aprende/blockchain",
+    icon: Rocket,
+    title: "Startups & Proyectos",
+    description: "Los mejores proyectos DeFi construidos por venezolanos. Conoce el ecosistema en crecimiento.",
+    href: "/startups",
+    color: "text-white/60",
+    bg: "bg-white/[0.05]",
+    span: "md:col-span-2",
+    cta: "Ver proyectos",
   },
   {
-    icon: "🏦",
-    title: "DeFi 101",
-    description: "Aprende a usar protocolos de finanzas descentralizadas. Ahorros, préstamos y más.",
-    lessons: 12,
-    level: "Intermedio",
-    href: "/aprende/defi",
+    icon: Users,
+    title: "Comunidades",
+    description: "30K+ venezolanos en Discord, Telegram y meetups.",
+    href: "/comunidades",
+    color: "text-white/60",
+    bg: "bg-white/[0.05]",
+    span: "",
+    cta: "Ver comunidades",
   },
   {
-    icon: "🌐",
-    title: "Web3 & NFTs",
-    description: "El internet del futuro y los activos digitales explicados para el venezolano.",
-    lessons: 10,
-    level: "Intermedio",
-    href: "/aprende/web3",
+    icon: Calendar,
+    title: "Eventos",
+    description: "Hackathons, workshops y meetups en el ecosistema.",
+    href: "/eventos",
+    color: "text-white/60",
+    bg: "bg-white/[0.05]",
+    span: "",
+    cta: "Ver eventos",
   },
   {
-    icon: "🤖",
-    title: "Agentes de IA",
-    description: "Construye agentes inteligentes que trabajen por ti. El futuro del trabajo.",
-    lessons: 15,
-    level: "Avanzado",
-    href: "/aprende/agentes-ia",
+    icon: Briefcase,
+    title: "Empleos Web3",
+    description: "100% remoto. Paga en USDC. Tu talento no tiene fronteras.",
+    href: "/empleos",
+    color: "text-amber-400/60",
+    bg: "bg-amber-500/10",
+    span: "",
+    cta: "Ver empleos",
   },
-];
-
-const stats = [
-  { value: "10K+", label: "Venezolanos en la comunidad" },
-  { value: "50+", label: "Recursos gratuitos" },
-  { value: "4", label: "Tracks de aprendizaje" },
-  { value: "100%", label: "En español venezolano" },
+  {
+    icon: BookOpen,
+    title: "Blog & Aprende",
+    description: "Contenido DeFi, IA y Web3 en español venezolano.",
+    href: "/blog",
+    color: "text-violet-400/60",
+    bg: "bg-violet-500/10",
+    span: "",
+    cta: "Leer artículos",
+  },
+  {
+    icon: Trophy,
+    title: "Hackathon MVPs",
+    description: "Proyectos construidos en competencias. El futuro de Venezuela en Web3.",
+    href: "/hackathon",
+    color: "text-green-400/60",
+    bg: "bg-green-500/10",
+    span: "md:col-span-2",
+    cta: "Ver proyectos",
+  },
 ];
 
 const features = [
-  { icon: BookOpen, title: "Aprende a tu ritmo", description: "Contenido estructurado desde cero hasta avanzado, pensado para el contexto venezolano." },
+  { icon: BookOpen, title: "Aprende a tu ritmo", description: "Desde cero hasta avanzado, pensado para el contexto venezolano." },
   { icon: Bot, title: "IA + Blockchain", description: "El único hub en Venezuela que combina agentes de IA con el ecosistema DeFi." },
-  { icon: Wrench, title: "Herramientas reales", description: "No solo teoría. Accede a herramientas que puedes usar hoy para proteger tu capital." },
+  { icon: Wrench, title: "Herramientas reales", description: "Accede a herramientas que puedes usar hoy para proteger tu capital." },
   { icon: Users, title: "Comunidad activa", description: "Miles de venezolanos aprendiendo y construyendo juntos en Web3." },
-  { icon: Shield, title: "USDC & Remesas", description: "Casos de uso concretos: cómo recibir remesas en USDC y escapar de la inflación." },
-  { icon: Globe, title: "Diáspora conectada", description: "Venezuela dentro y fuera. Conectamos a la diáspora con el ecosistema descentralizado." },
+  { icon: Shield, title: "USDC & Remesas", description: "Cómo recibir remesas en USDC y escapar de la inflación." },
+  { icon: Globe, title: "Diáspora conectada", description: "Venezuela dentro y fuera. Conectamos a la diáspora con DeFi." },
 ];
 
-// Placeholder for upcoming blog posts - REMOVED DEFAULT CONTENT
-const recentPosts: any[] = [];
+function NewsletterSection() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 800));
+    toast.success("¡Suscripción exitosa! Revisa tu email.", { duration: 4000 });
+    setEmail("");
+    setLoading(false);
+  };
+
+  return (
+    <GlassCard className="p-8 md:p-12 text-center">
+      <h2 className="font-display text-2xl md:text-3xl text-white mb-4">
+        <ScrambleText text="El newsletter DeFi de Venezuela" speed={25} iterations={10} />
+      </h2>
+      <p className="text-white/40 text-sm mb-8 max-w-2xl mx-auto leading-relaxed">
+        Cada semana: noticias del ecosistema crypto, tutoriales prácticos,
+        oportunidades DeFi y análisis del mercado. En español venezolano, sin spam.
+      </p>
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+        <Input
+          type="email"
+          placeholder="tu@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 rounded-full px-5 focus:border-white/20"
+          required
+        />
+        <Button
+          type="submit"
+          disabled={loading}
+          className="bg-white text-black font-medium rounded-full px-8 hover:bg-white/90 border-0"
+        >
+          {loading ? (
+            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <><Mail className="mr-2 w-4 h-4" />Suscribirme</>
+          )}
+        </Button>
+      </form>
+      <p className="text-white/20 text-xs mt-4">Sin spam. +5,000 venezolanos ya suscritos.</p>
+    </GlassCard>
+  );
+}
 
 export default function HomePage() {
   return (
-    <div className="overflow-hidden">
-      {/* Hero */}
-      <section className="hero-glow relative min-h-[90vh] flex items-center">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-[#00FF88]/12 rounded-full blur-[120px] animate-pulse-glow" />
-          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#161B24]/60 rounded-full blur-[100px] animate-pulse-glow" style={{ animationDelay: "2s" }} />
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_60%,#0D1117_100%)]" />
-        </div>
+    <div className="min-h-screen" style={{ background: "hsl(201, 100%, 6%)" }}>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00FF88]/30 bg-[#00FF88]/10 text-[#00FF88] text-sm font-medium mb-8 backdrop-blur-sm">
-              <Zap className="w-4 h-4" />
+      {/* ══ HERO with VIDEO ══════════════════════════════════════════════ */}
+      <section className="relative min-h-screen flex flex-col overflow-hidden">
+        {/* Video background */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0 opacity-50"
+        >
+          <source
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        {/* Gradient overlay */}
+        <div
+          className="absolute inset-0 z-[1]"
+          style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.4), transparent 40%, hsl(201,100%,6%))" }}
+        />
+
+        {/* Hero content */}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 pb-32">
+          {/* Live badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass mb-8 animate-fade-rise">
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            <span className="text-xs text-white/70 uppercase tracking-wider">
               El Hub DeFi de Venezuela 🇻🇪
-            </div>
-
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-[#F0F1F5] mb-6 leading-[1.1] tracking-tight">
-              Conecta con el ecosistema{" "}
-              <span className="gradient-text">DeFi de Venezuela</span>
-            </h1>
-
-            <p className="text-lg sm:text-xl text-[#9DA5B4]/70 mb-10 max-w-2xl mx-auto leading-relaxed">
-              La plataforma que reúne comunidades, eventos, empleos y oportunidades
-              del ecosistema DeFi venezolano en un solo lugar.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" asChild>
-                <Link href="/aprende" className="flex items-center gap-2">
-                  Empieza a aprender gratis
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="lg" asChild>
-                <Link href="/newsletter" className="flex items-center gap-2">
-                  <Newspaper className="w-5 h-5" />
-                  Newsletter semanal
-                </Link>
-              </Button>
-            </div>
+            </span>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-px mt-20 max-w-3xl mx-auto rounded-2xl overflow-hidden border border-[#00FF88]/10">
-            {stats.map((stat, i) => (
-              <div
-                key={stat.label}
-                className="text-center py-6 px-4 bg-gradient-to-b from-[#161B24]/40 to-[#0D1117]/60 backdrop-blur-sm"
-              >
-                <div className="text-3xl font-bold text-[#9DA5B4]">{stat.value}</div>
-                <div className="text-xs text-[#9DA5B4]/50 mt-1 leading-snug">{stat.label}</div>
-              </div>
-            ))}
+          {/* Main heading */}
+          <h1 className="text-5xl sm:text-7xl md:text-8xl leading-[0.95] tracking-[-2px] max-w-6xl font-normal font-display animate-fade-rise text-white mb-0">
+            <ScrambleText text="Conecta, Aprende" speed={20} iterations={12} />
+          </h1>
+          <h1 className="text-5xl sm:text-7xl md:text-8xl leading-[0.95] tracking-[-2px] max-w-6xl font-normal font-display animate-fade-rise text-white/40 mt-2">
+            <ScrambleText text="y Construye en DeFi" speed={20} iterations={15} />
+          </h1>
+
+          <p className="text-white/40 text-base sm:text-lg max-w-2xl mt-8 leading-relaxed animate-fade-rise-delay">
+            La plataforma que reúne comunidades, eventos, empleos y oportunidades
+            del ecosistema DeFi venezolano en un solo lugar.
+          </p>
+
+          {/* CTA buttons */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 mt-12 animate-fade-rise-delay-2">
+            <Link
+              href="/aprende"
+              className="liquid-glass rounded-full px-10 py-4 text-base text-white hover:scale-[1.03] transition-transform flex items-center gap-2"
+            >
+              <Rocket className="w-[18px] h-[18px]" />
+              Explorar el ecosistema
+            </Link>
+            <Link
+              href="/unirse"
+              className="text-white/50 hover:text-white text-sm transition-colors flex items-center gap-2"
+            >
+              <Zap className="w-4 h-4" />
+              Únete a la comunidad
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Tracks */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0D1117] via-[#111827]/50 to-[#0D1117] pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-[#00FF88] text-sm font-semibold tracking-widest uppercase mb-3">Aprende</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#F0F1F5] mb-4">¿Por dónde empiezas?</h2>
-            <p className="text-[#9DA5B4]/60 max-w-xl mx-auto">
-              4 rutas diseñadas para el venezolano. Sin prerrequisitos, sin pasos perdidos.
-            </p>
-          </div>
+      {/* ══ CONTENT AREA ═════════════════════════════════════════════════ */}
+      <div className="relative z-10">
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {tracks.map((track) => (
-              <Link
-                key={track.title}
-                href={track.href}
-                className="group relative rounded-2xl p-6 transition-all duration-300 overflow-hidden"
-                style={{
-                  background: "linear-gradient(135deg, #161B24 0%, #0F1319 100%)",
-                  border: "1px solid rgba(0,255,136,0.15)",
-                }}
-              >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: "linear-gradient(135deg, #1E2433 0%, #0F1319 100%)" }} />
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#00FF88]/5 rounded-full blur-2xl group-hover:bg-[#00FF88]/10 transition-all duration-300" />
-
-                <div className="relative flex items-start gap-4">
-                  <div className="text-4xl">{track.icon}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-bold text-[#F0F1F5] group-hover:text-[#9DA5B4] transition-colors">
-                        {track.title}
-                      </h3>
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-[#00FF88]/10 text-[#9DA5B4]/60 border border-[#00FF88]/15">
-                        {track.level}
-                      </span>
-                    </div>
-                    <p className="text-[#9DA5B4]/60 text-sm leading-relaxed mb-4">{track.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-[#9DA5B4]/40">{track.lessons} lecciones</span>
-                      <span className="text-[#00FF88] text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
-                        Comenzar <ChevronRight className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </div>
+        {/* ── Agentic World ──────────────────────────────────────────── */}
+        <section className="py-20 px-6">
+          <div className="max-w-6xl mx-auto">
+            <GlassCard className="p-8 md:p-12">
+              <div className="space-y-6">
+                {/* Live badge */}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="text-[11px] text-amber-400 uppercase tracking-wider">NUEVO</span>
                 </div>
-              </Link>
-            ))}
-          </div>
 
-          <div className="text-center mt-10">
-            <Button variant="outline" asChild>
-              <Link href="/aprende">Ver todos los recursos</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(180deg, #0D1117 0%, #111827 50%, #0D1117 100%)" }} />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#00FF88]/4 rounded-full blur-[100px] pointer-events-none" />
-
-        <div className="relative max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-[#00FF88] text-sm font-semibold tracking-widest uppercase mb-3">Por qué DefiVenezuela</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#F0F1F5] mb-4">
-              Hecho para la realidad venezolana
-            </h2>
-            <p className="text-[#9DA5B4]/60 max-w-xl mx-auto">
-              No es contenido traducido. Es contenido creado pensando en la inflación,
-              las remesas y los sueños de los venezolanos.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="group p-6 rounded-2xl transition-all duration-300 cursor-default"
-                style={{
-                  background: "linear-gradient(135deg, rgba(22,27,36,0.6) 0%, rgba(13,17,23,0.8) 100%)",
-                  border: "1px solid rgba(0,255,136,0.1)",
-                }}
-              >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-all duration-300"
-                  style={{ background: "linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,255,136,0.05))" }}>
-                  <feature.icon className="w-5 h-5 text-[#00FF88]" />
-                </div>
-                <h3 className="font-bold text-[#F0F1F5] mb-2">{feature.title}</h3>
-                <p className="text-[#9DA5B4]/60 text-sm leading-relaxed">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Agentic World */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="relative rounded-3xl overflow-hidden p-8 sm:p-12"
-            style={{
-              background: "linear-gradient(135deg, #161B24 0%, #0F1319 50%, #0D1117 100%)",
-              border: "1px solid rgba(0,255,136,0.2)",
-              boxShadow: "0 0 80px rgba(0,255,136,0.08), inset 0 1px 0 rgba(157,165,180,0.05)",
-            }}>
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00FF88]/6 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#9DA5B4]/3 rounded-full blur-3xl pointer-events-none" />
-
-            <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00FF88]/30 bg-[#00FF88]/10 text-[#00FF88] text-xs font-medium mb-6">
-                  <Bot className="w-3 h-3" />
-                  NUEVO — Agentic World
-                </div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-[#F0F1F5] mb-4 leading-tight">
-                  Venezuela entra a la era de los{" "}
-                  <span className="gradient-text">Agentes de IA</span>
+                <h2 className="font-display text-3xl md:text-5xl text-white leading-tight">
+                  <ScrambleText text="Venezuela entra a la era de los" speed={20} iterations={12} />
                 </h2>
-                <p className="text-[#9DA5B4]/70 mb-8 leading-relaxed">
-                  Aprende a construir, usar y monetizar agentes de inteligencia artificial.
+                <h2 className="font-display text-3xl md:text-5xl text-amber-400/80 leading-tight">
+                  <ScrambleText text="Agentes de Inteligencia Artificial" speed={20} iterations={15} />
+                </h2>
+
+                <p className="text-white/40 text-sm md:text-base max-w-2xl">
+                  Aprende a construir, usar y monetizar agentes de IA.
                   Automatiza tu trabajo, crea nuevos ingresos y sé parte de la próxima revolución tecnológica.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button variant="primary" asChild>
-                    <Link href="/agentic-world" className="flex items-center gap-2">
-                      Explorar Agentic World <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                  <Button variant="ghost" asChild>
-                    <Link href="/aprende/agentes-ia">Ver el track gratuito</Link>
-                  </Button>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { icon: "🤖", title: "Trading Bots", desc: "Automatiza operaciones DeFi" },
-                  { icon: "🔍", title: "Research Agents", desc: "Analiza proyectos crypto" },
-                  { icon: "💬", title: "Chatbots Web3", desc: "IA para tu proyecto" },
-                  { icon: "📊", title: "Analytics IA", desc: "Datos del mercado en tiempo real" },
-                ].map((item) => (
-                  <div
-                    key={item.title}
-                    className="p-4 rounded-xl transition-all duration-200"
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.07)",
-                    }}
-                  >
-                    <div className="text-2xl mb-2">{item.icon}</div>
-                    <div className="font-semibold text-[#F0F1F5] text-sm">{item.title}</div>
-                    <div className="text-[#9DA5B4]/50 text-xs mt-1">{item.desc}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Lo último del hub - Coming Soon */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(180deg, #0D1117 0%, #0F1319 50%, #0D1117 100%)" }} />
-        <div className="relative max-w-7xl mx-auto">
-          <div className="text-center">
-            <p className="text-[#00FF88] text-sm font-semibold tracking-widest uppercase mb-3">Blog</p>
-            <h2 className="text-3xl font-bold text-[#F0F1F5] mb-2">Lo último del hub</h2>
-            <p className="text-[#9DA5B4]/60 text-sm mb-12">Contenido semanal generado y curado con IA</p>
-
-            <div className="flex flex-col items-center gap-6">
-              <div className="text-7xl animate-bounce">🚀</div>
-              <div>
-                <h3 className="text-2xl font-bold text-[#F0F1F5] mb-2">Pronto...</h3>
-                <p className="text-[#9DA5B4]/60 max-w-md">
-                  Estamos creando el mejor contenido sobre DeFi, IA y Web3 para Venezuela. Entérate cuando esté listo.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter CTA */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 relative">
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0,255,136,0.08) 0%, transparent 70%)" }} />
-        <div className="relative max-w-2xl mx-auto text-center">
-          <div className="text-4xl mb-6">📬</div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#F0F1F5] mb-4">
-            El newsletter de DeFi para Venezuela
-          </h2>
-          <p className="text-[#9DA5B4]/60 mb-10 leading-relaxed">
-            Cada semana: noticias del ecosistema crypto, tutoriales prácticos,
-            oportunidades DeFi y análisis del mercado. En español venezolano, sin spam.
-          </p>
-          <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="tu@email.com"
-              className="flex-1 px-4 py-3 rounded-xl text-[#F0F1F5] placeholder-[#9DA5B4]/30 focus:outline-none transition-colors text-sm"
-              style={{
-                background: "rgba(22,27,36,0.4)",
-                border: "1px solid rgba(0,255,136,0.2)",
-              }}
-            />
-            <Button type="submit" className="whitespace-nowrap">
-              Suscribirme gratis
-            </Button>
-          </form>
-          <p className="text-[#9DA5B4]/30 text-xs mt-4">
-            Sin spam. Cancela cuando quieras. +5,000 venezolanos ya suscritos.
-          </p>
-        </div>
-      </section>
-
-      {/* Comunidades + Eventos + Empleos */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 relative">
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(180deg, #0D1117 0%, #0F1319 50%, #0D1117 100%)" }} />
-        <div className="relative max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-[#00FF88] text-sm font-semibold tracking-widest uppercase mb-3">Ecosistema</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#F0F1F5] mb-4">
-              Venezuela construye en Web3
-            </h2>
-            <p className="text-[#9DA5B4]/60 max-w-xl mx-auto">
-              Comunidades activas, eventos regulares y oportunidades de trabajo en cripto. El ecosistema venezolano no para.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              {
-                icon: Users,
-                emoji: "🤝",
-                title: "Comunidades",
-                href: "/comunidades",
-                desc: "Más de 30,000 venezolanos en Discord, Telegram y meetups. La comunidad cripto VZ más grande de LATAM.",
-                stat: "30K+ miembros",
-                cta: "Ver comunidades",
-              },
-              {
-                icon: Calendar,
-                emoji: "📅",
-                title: "Eventos",
-                href: "/eventos",
-                desc: "Hackathons, workshops, meetups y conferencias. Conecta con builders, founders e inversores del ecosistema.",
-                stat: "12+ eventos/mes",
-                cta: "Ver eventos",
-              },
-              {
-                icon: Briefcase,
-                emoji: "💼",
-                title: "Empleos Web3",
-                href: "/empleos",
-                desc: "Trabaja para empresas cripto globales desde Venezuela. 100% remoto, pago en USDC. Tu talento no tiene fronteras.",
-                stat: "50+ ofertas activas",
-                cta: "Ver empleos",
-              },
-            ].map((item) => (
-              <Link
-                key={item.title}
-                href={item.href}
-                className="group flex flex-col p-6 rounded-2xl transition-all duration-300"
-                style={{
-                  background: "linear-gradient(135deg, rgba(22,27,36,0.5) 0%, rgba(13,17,23,0.8) 100%)",
-                  border: "1px solid rgba(0,255,136,0.1)",
-                }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-3xl">{item.emoji}</span>
-                  <span className="text-xs text-[#00FF88] font-medium">{item.stat}</span>
-                </div>
-                <h3 className="font-bold text-[#F0F1F5] text-lg mb-2 group-hover:text-[#9DA5B4] transition-colors">
-                  {item.title}
-                </h3>
-                <p className="text-[#9DA5B4]/60 text-sm leading-relaxed mb-5 flex-1">{item.desc}</p>
-                <span className="text-sm text-[#00FF88] flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
-                  {item.cta} <ChevronRight className="w-4 h-4" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Herramientas B2B - COMMENTED OUT FOR LATER IMPLEMENTATION */}
-      {/*
-      <section className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(180deg, #0D1117 0%, #111827 50%, #0D1117 100%)" }} />
-        <div className="relative max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00FF88]/30 bg-[#00FF88]/10 text-[#00FF88] text-xs font-medium mb-6">
-                <TrendingUp className="w-3 h-3" />
-                Para empresas & startups
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#F0F1F5] mb-4 leading-tight">
-                Herramientas que tu empresa necesita en la era Web3
-              </h2>
-              <p className="text-[#9DA5B4]/60 mb-8 leading-relaxed">
-                Soluciones de IA, analytics de blockchain y automatización
-                para startups venezolanas que quieren liderar la transformación digital.
-              </p>
-              <Button asChild>
-                <Link href="/herramientas" className="flex items-center gap-2">
-                  Ver herramientas <ArrowRight className="w-4 h-4" />
-                </Link>
-              </Button>
-            </div>
-            <div className="flex flex-col gap-3">
-              {[
-                { icon: "📊", title: "DeFi Analytics Dashboard", price: "$99/mes", desc: "Monitorea pools, yields y riesgos en tiempo real." },
-                { icon: "🤖", title: "Agentes IA Personalizados", price: "$299/mes", desc: "Automatización inteligente para tu negocio." },
-                { icon: "🔐", title: "Compliance Crypto", price: "Consultoría", desc: "Navega la regulación cripto con confianza." },
-              ].map((tool, i) => (
-                <div
-                  key={tool.title}
-                  className="flex items-center gap-4 p-5 rounded-2xl transition-all duration-200"
-                  style={{
-                    background: i === 1
-                      ? "linear-gradient(135deg, #161B24 0%, #0F1319 100%)"
-                      : "linear-gradient(135deg, rgba(22,27,36,0.4) 0%, rgba(13,17,23,0.6) 100%)",
-                    border: i === 1
-                      ? "1px solid rgba(0,255,136,0.3)"
-                      : "1px solid rgba(0,255,136,0.1)",
-                  }}
-                >
-                  <div className="text-2xl">{tool.icon}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-semibold text-[#F0F1F5] text-sm">{tool.title}</h3>
-                      <span className="text-[#00FF88] text-xs font-medium">{tool.price}</span>
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-4 max-w-lg">
+                  {[
+                    { label: "Comunidad", value: "10K+" },
+                    { label: "Recursos", value: "50+" },
+                    { label: "Tracks", value: "4" },
+                  ].map((stat) => (
+                    <div key={stat.label} className="bg-white/[0.03] border border-white/[0.06] rounded-lg p-4">
+                      <div className="text-[10px] text-white/40 uppercase">{stat.label}</div>
+                      <div className="text-xl font-display text-amber-300 mt-1">
+                        <ScrambleText text={stat.value} speed={30} iterations={6} />
+                      </div>
                     </div>
-                    <p className="text-[#9DA5B4]/50 text-xs">{tool.desc}</p>
-                  </div>
+                  ))}
                 </div>
+
+                {/* CTAs */}
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <Link
+                    href="/agentic-world"
+                    className="flex items-center gap-2 px-6 py-3.5 bg-green-500 text-black text-sm font-bold rounded-full hover:scale-[1.03] transition-transform"
+                  >
+                    EXPLORAR AGENTIC WORLD <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link
+                    href="/aprende/agentes-ia"
+                    className="flex items-center gap-2 px-6 py-3.5 liquid-glass rounded-full text-amber-300 text-sm font-medium hover:scale-[1.03] transition-transform"
+                  >
+                    <Sparkles className="w-4 h-4" /> VER TRACK GRATUITO
+                  </Link>
+                  <Link
+                    href="/comunidades"
+                    className="flex items-center gap-2 px-6 py-3.5 liquid-glass rounded-full text-[#00D4FF] text-sm font-medium hover:scale-[1.03] transition-transform"
+                  >
+                    COMUNIDADES
+                  </Link>
+                </div>
+              </div>
+            </GlassCard>
+          </div>
+        </section>
+
+        {/* ── Ecosystem Modules ──────────────────────────────────────── */}
+        <section className="py-16 px-6">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-display text-white mb-8">
+              <ScrambleText text="El Ecosistema Venezolano" speed={25} iterations={8} />
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {modules.map((mod) => (
+                <GlassCard key={mod.title} className={`p-6 space-y-4 ${mod.span}`}>
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${mod.bg}`}>
+                    <mod.icon className={`${mod.color}`} size={20} />
+                  </div>
+                  <h3 className="text-xl font-display text-white">{mod.title}</h3>
+                  <p className="text-white/40 text-sm leading-relaxed">{mod.description}</p>
+                  <Link
+                    href={mod.href}
+                    className={`${mod.color} hover:text-white text-sm flex items-center gap-1 transition-colors`}
+                  >
+                    {mod.cta} <ArrowRight size={14} />
+                  </Link>
+                </GlassCard>
               ))}
             </div>
           </div>
-        </div>
-      </section>
-      */}
+        </section>
+
+        {/* ── Why DefiVenezuela ──────────────────────────────────────── */}
+        <section className="py-16 px-6">
+          <div className="max-w-7xl mx-auto">
+            <FadeIn className="mb-8">
+              <h2 className="text-2xl md:text-3xl font-display text-white">
+                <ScrambleText text="Hecho para la realidad venezolana" speed={25} iterations={8} />
+              </h2>
+              <p className="text-white/40 text-sm mt-2">
+                No es contenido traducido. Es contenido creado pensando en la inflación, las remesas y los sueños venezolanos.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {features.map((f) => (
+                <StaggerItem key={f.title}>
+                  <GlassCard className="p-6 space-y-3">
+                    <div className="w-10 h-10 rounded-lg bg-white/[0.05] flex items-center justify-center">
+                      <f.icon className="text-white/60" size={20} />
+                    </div>
+                    <h3 className="font-display text-lg text-white">{f.title}</h3>
+                    <p className="text-white/40 text-sm leading-relaxed">{f.description}</p>
+                  </GlassCard>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ── Blog / Aprende ─────────────────────────────────────────── */}
+        <section className="py-16 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl md:text-3xl font-display text-white">Lo último del hub</h2>
+              <Link href="/blog" className="text-sm text-white/60 hover:text-white transition-colors flex items-center gap-1">
+                Ver más <ArrowRight size={14} />
+              </Link>
+            </div>
+
+            {/* Placeholder cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { tag: "DeFi", title: "Cómo usar USDC para protegerte de la inflación en Venezuela", time: "5 min", color: "bg-green-500/10 text-green-400 border-green-500/20" },
+                { tag: "Web3", title: "Los mejores protocolos DeFi para venezolanos en 2025", time: "8 min", color: "bg-violet-500/10 text-violet-400 border-violet-500/20" },
+                { tag: "IA", title: "Cómo crear tu primer agente de IA para trading en 10 pasos", time: "12 min", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
+              ].map((post) => (
+                <Link key={post.title} href="/blog">
+                  <GlassCard className="overflow-hidden group">
+                    <div className="h-36 bg-white/[0.02] flex items-center justify-center">
+                      <BookOpen className="text-white/10" size={40} />
+                    </div>
+                    <div className="p-5 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Badge className={`border text-[10px] ${post.color}`}>{post.tag}</Badge>
+                        <span className="text-[10px] text-white/20">{post.time}</span>
+                      </div>
+                      <h3 className="text-base font-display text-white group-hover:text-[#00FF88] transition-colors line-clamp-2">
+                        {post.title}
+                      </h3>
+                    </div>
+                  </GlassCard>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Metrics CTA ────────────────────────────────────────────── */}
+        <section className="py-12 px-6">
+          <div className="max-w-4xl mx-auto">
+            <Link href="/protocolos">
+              <GlassCard className="flex flex-col md:flex-row items-center gap-6 p-8 group">
+                <div className="w-14 h-14 rounded-xl bg-white/[0.05] flex items-center justify-center shrink-0">
+                  <BarChart3 className="text-white/60" size={28} />
+                </div>
+                <div className="text-center md:text-left flex-1">
+                  <h3 className="text-xl font-display text-white group-hover:text-[#00FF88] transition-colors mb-1">
+                    Protocolos DeFi para Venezuela
+                  </h3>
+                  <p className="text-white/40 text-sm">
+                    Los mejores protocolos para ahorrar, ganar rendimientos y moverse en cripto desde Venezuela.
+                  </p>
+                </div>
+                <ArrowRight className="text-white/40 group-hover:translate-x-2 transition-transform" size={24} />
+              </GlassCard>
+            </Link>
+          </div>
+        </section>
+
+        {/* ── Newsletter ─────────────────────────────────────────────── */}
+        <section className="py-20 px-6">
+          <div className="max-w-4xl mx-auto">
+            <NewsletterSection />
+          </div>
+        </section>
+
+      </div>
     </div>
   );
 }

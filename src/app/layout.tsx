@@ -1,13 +1,28 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-// import Analytics from "@/components/Analytics"; // TODO: Uncomment when GA_ID is configured
+import { Toaster } from "sonner";
 
-const geist = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,14 +46,21 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={`${geist.variable} h-full antialiased`}>
-      <head>
-        {/* <Analytics /> TODO: Uncomment when GA_ID is configured */}
-      </head>
-      <body className="min-h-full flex flex-col bg-[#0D1117] text-[#9DA5B4]" suppressHydrationWarning>
+    <html lang="es" className={`${inter.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col text-[#9DA5B4]" style={{ background: 'hsl(201,100%,6%)' }} suppressHydrationWarning>
         <Navbar />
         <main className="flex-1 pt-16">{children}</main>
         <Footer />
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "#161B24",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: "#F0F1F5",
+            },
+          }}
+        />
       </body>
     </html>
   );

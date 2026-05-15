@@ -10,27 +10,30 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", asChild = false, children, ...props }, ref) => {
+  ({ className, variant = "primary", size = "md", asChild = false, children, disabled, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
         ref={ref}
+        disabled={disabled}
         className={cn(
-          "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 cursor-pointer",
+          "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 cursor-pointer select-none",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00FF88]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1117]",
+          "disabled:pointer-events-none disabled:opacity-50",
           {
-            "bg-[#00FF88] hover:bg-[#00e67a] text-[#0D1117] shadow-[0_0_20px_rgba(0,255,136,0.3)] hover:shadow-[0_0_30px_rgba(0,255,136,0.5)]":
+            "bg-[#00FF88] hover:bg-[#00e67a] active:bg-[#00cc6a] text-[#0D1117] shadow-[0_0_20px_rgba(0,255,136,0.25)] hover:shadow-[0_0_32px_rgba(0,255,136,0.45)] active:shadow-none":
               variant === "primary",
-            "bg-[#161B24] hover:bg-[#1E242F] text-[#9DA5B4] border border-[#272E3B] hover:border-[#00FF88]/30":
+            "bg-[#161B24] hover:bg-[#1E242F] active:bg-[#252C3A] text-[#9DA5B4] hover:text-[#F0F1F5] border border-white/10 hover:border-white/20":
               variant === "secondary",
-            "border border-[#00FF88]/40 hover:border-[#00FF88] text-[#00FF88] hover:bg-[#00FF88]/10":
+            "border border-[#00FF88]/40 hover:border-[#00FF88] text-[#00FF88] hover:bg-[#00FF88]/8 active:bg-[#00FF88]/15":
               variant === "outline",
-            "text-[#9DA5B4] hover:text-[#F0F1F5] hover:bg-white/5":
+            "text-[#9DA5B4] hover:text-[#F0F1F5] hover:bg-white/5 active:bg-white/8":
               variant === "ghost",
           },
           {
-            "px-4 py-2 text-sm": size === "sm",
-            "px-6 py-3 text-base": size === "md",
-            "px-8 py-4 text-lg": size === "lg",
+            "px-3.5 py-2 text-sm gap-1.5 h-9": size === "sm",
+            "px-5 py-2.5 text-sm gap-2 h-10": size === "md",
+            "px-7 py-3.5 text-base gap-2.5 h-12": size === "lg",
           },
           className
         )}
