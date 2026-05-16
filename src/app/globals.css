@@ -1,20 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Base surfaces — deep ocean teal (defi-mexico style) */
-  --background:         hsl(201, 100%, 6%);   /* #000f14 */
-  --surface:            hsl(201, 60%, 9%);    /* #061620 */
-  --surface-2:          hsl(201, 40%, 13%);   /* #0d1f2b */
-  --border:             hsl(201, 30%, 18%);   /* #182838 */
+  /* DeFi México Color Palette — Dark Theme */
+  --background:         hsl(220, 13%, 9%);    /* #141414 casi negro */
+  --surface:            hsl(220, 13%, 11%);   /* #1A1A1A */
+  --surface-2:          hsl(220, 13%, 13%);   /* #1F1F1F */
+  --border:             hsl(220, 13%, 20%);   /* #262626 */
 
-  /* Semantic tokens — defi-mexico compatible */
+  /* Semantic tokens */
   --card:               hsl(220, 13%, 11%);
   --card-foreground:    hsl(220, 9%, 95%);
   --popover:            hsl(220, 13%, 11%);
   --popover-foreground: hsl(220, 9%, 95%);
   --muted:              hsl(220, 13%, 15%);
   --muted-foreground:   hsl(220, 9%, 65%);
-  --accent:             hsl(160, 100%, 50%);
+  --accent:             hsl(160, 100%, 50%);  /* #00FF88 neon green */
   --accent-foreground:  hsl(220, 13%, 9%);
   --destructive:        hsl(0, 84%, 60%);
   --destructive-foreground: hsl(220, 9%, 95%);
@@ -22,29 +25,34 @@
   --radius:             0.75rem;
 
   /* Text */
-  --foreground:   hsl(220, 9%, 65%);    /* #9DA5B4 muted */
-  --heading:      hsl(220, 9%, 95%);    /* #F0F1F5 */
+  --foreground:   hsl(220, 9%, 65%);        /* #A8A8A8 texto mutado */
+  --heading:      hsl(220, 9%, 95%);        /* #F2F0ED blanco */
 
-  /* Accents */
-  --primary:      hsl(160, 100%, 50%);  /* #00FF88 neon green */
-  --secondary:    hsl(195, 100%, 50%);  /* #00D4FF electric blue */
-  --primary-dark: hsl(160, 100%, 30%);  /* #009952 */
+  /* DeFi México Primary Colors */
+  --primary:      hsl(160, 100%, 50%);      /* #00FF88 neon green */
+  --secondary:    hsl(195, 100%, 50%);      /* #00D4FF electric blue */
+  --primary-dark: hsl(160, 100%, 30%);      /* darker green */
 
   /* Named aliases */
-  --neon-green:     hsl(160, 100%, 50%);
-  --electric-blue:  hsl(195, 100%, 50%);
-  --dark-surface:   hsl(201, 60%, 9%);
-  --darker-surface: hsl(201, 100%, 6%);
+  --neon-green:     hsl(160, 100%, 50%);    /* #00FF88 */
+  --electric-blue:  hsl(195, 100%, 50%);    /* #00D4FF */
+  --dark-surface:   hsl(220, 13%, 11%);
+  --darker-surface: hsl(220, 13%, 9%);
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, hsl(160 100% 50%), hsl(195 100% 50%));
-  --gradient-dark:    linear-gradient(135deg, hsl(220 13% 11%), hsl(220 13% 15%));
-  --gradient-glow:    linear-gradient(135deg, hsl(160 100% 50% / 0.1), hsl(195 100% 50% / 0.1));
+  --gradient-primary: linear-gradient(135deg, #00FF88, #00D4FF);
+  --gradient-dark:    linear-gradient(135deg, hsl(220 13% 11%), hsl(220 13% 9%));
+  --gradient-glow:    linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,212,255,0.1));
 
   /* Shadows */
-  --shadow-neon:    0 0 30px hsl(160 100% 50% / 0.3);
-  --shadow-blue:    0 0 30px hsl(195 100% 50% / 0.3);
-  --shadow-elegant: 0 10px 30px hsl(220 13% 5% / 0.5);
+  --shadow-neon:    0 0 30px rgba(0,255,136,0.3);
+  --shadow-blue:    0 0 30px rgba(0,212,255,0.3);
+  --shadow-elegant: 0 10px 30px rgba(0,0,0,0.5);
+
+  /* Fonts */
+  --font-inter:     'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:      'JetBrains Mono', monospace;
+  --font-serif:     'Instrument Serif', Georgia, serif;
 }
 
 @theme inline {
@@ -62,17 +70,24 @@
   --color-accent:           var(--accent);
   --color-ring:             var(--ring);
   --color-destructive:      var(--destructive);
-  --font-sans:              var(--font-inter);
+  --font-inter:             var(--font-inter);
   --font-mono:              var(--font-mono);
-  --font-serif:             var(--font-instrument-serif);
+  --font-serif:             var(--font-serif);
 }
 
 body {
-  background: hsl(201, 100%, 6%);
+  background: var(--background);
   color: var(--foreground);
+  font-family: var(--font-inter);
 }
 
-/* Gradient text — neon green to electric blue */
+/* Display Font */
+.font-display {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 600;
+}
+
+/* Gradient text */
 .gradient-text,
 .text-gradient {
   background: var(--gradient-primary);
@@ -133,7 +148,7 @@ body {
   background:
     radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,255,136,0.12) 0%, transparent 70%),
     radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,212,255,0.07) 0%, transparent 60%),
-    hsl(201,100%,6%);
+    hsl(220,13%,9%);
 }
 
 /* Highlight card */
@@ -143,10 +158,10 @@ body {
   box-shadow: 0 4px 24px rgba(0,255,136,0.08), inset 0 1px 0 rgba(0,255,136,0.05);
 }
 
-/* Neon text pulse */
-.neon-text {
+/* Neon text */
+.accent-text {
   color: #00FF88;
-  text-shadow: 0 0 20px rgba(0,255,136,0.5);
+  font-weight: 600;
 }
 
 /* Animations */
@@ -183,8 +198,8 @@ body {
 .animate-fade-rise { animation: fade-rise 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
 
 @keyframes glow {
-  from { box-shadow: 0 0 20px hsl(160 100% 50% / 0.2); }
-  to   { box-shadow: 0 0 40px hsl(160 100% 50% / 0.5); }
+  from { box-shadow: 0 0 20px rgba(0,255,136,0.2); }
+  to   { box-shadow: 0 0 40px rgba(0,255,136,0.5); }
 }
 .animate-glow { animation: glow 2s ease-in-out infinite alternate; }
 
@@ -206,108 +221,26 @@ body {
 }
 .animate-fade-in-up { animation: fadeInUp 0.4s ease both; }
 
-/* Staggered fade-rise delays (defi-mexico hero) */
+/* Staggered fade-rise delays */
 .animate-fade-rise-delay   { animation: fade-rise 0.5s 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
 .animate-fade-rise-delay-2 { animation: fade-rise 0.5s 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
 
-/* ── Liquid glass — backdrop blur card (defi-mexico style) ──────────── */
+/* Liquid glass */
 .liquid-glass {
-  background: rgba(22, 27, 36, 0.6);
+  background: rgba(20, 20, 20, 0.6);
   backdrop-filter: blur(20px) saturate(1.4);
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .liquid-glass-hover:hover {
-  background: rgba(22, 27, 36, 0.75);
+  background: rgba(20, 20, 20, 0.75);
   border-color: rgba(0, 255, 136, 0.2);
-}
-
-/* ── Pixel-art retro card (defi-mexico RPG style) ───────────────────── */
-.pixel-card {
-  background: #161B24;
-  border: 2px solid rgba(0, 255, 136, 0.4);
-  box-shadow:
-    4px 4px 0px rgba(0, 255, 136, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  image-rendering: pixelated;
-}
-
-.pixel-card:hover {
-  box-shadow:
-    6px 6px 0px rgba(0, 255, 136, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
-  transform: translate(-1px, -1px);
-}
-
-.pixel-button {
-  background: #00FF88;
-  color: #0D1117;
-  border: 2px solid #00cc6a;
-  box-shadow: 4px 4px 0px #009952;
-  font-weight: 700;
-  letter-spacing: 0.025em;
-  transition: all 0.1s;
-}
-
-.pixel-button:hover {
-  background: #00e67a;
-  box-shadow: 6px 6px 0px #009952;
-  transform: translate(-1px, -1px);
-}
-
-.pixel-button:active {
-  box-shadow: 2px 2px 0px #009952;
-  transform: translate(1px, 1px);
-}
-
-.pixel-dialog {
-  background: #0D1117;
-  border: 3px solid rgba(0, 255, 136, 0.5);
-  box-shadow:
-    0 0 0 1px rgba(0, 255, 136, 0.15),
-    8px 8px 0px rgba(0, 0, 0, 0.5);
-  padding: 1.5rem;
-}
-
-.pixel-dialog::before {
-  content: '';
-  position: absolute;
-  top: -1px; left: -1px; right: -1px; bottom: -1px;
-  border: 1px solid rgba(0, 255, 136, 0.08);
-  pointer-events: none;
-}
-
-.pixel-tag {
-  background: var(--gradient-glow);
-  border: 1px solid rgba(0, 255, 136, 0.3);
-  color: #00FF88;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-}
-
-.pixel-progress {
-  background: rgba(0, 255, 136, 0.1);
-  border: 1px solid rgba(0, 255, 136, 0.2);
-  height: 8px;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.pixel-progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #00FF88, #00D4FF);
-  box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
-  transition: width 0.6s ease;
 }
 
 html { scroll-behavior: smooth; }
 
-/* ── Blog content renderer ───────────────────────────────────────────── */
+/* Blog content */
 .blog-content {
   color: #9DA5B4;
   line-height: 1.8;
@@ -318,7 +251,7 @@ html { scroll-behavior: smooth; }
 .blog-content h2,
 .blog-content h3,
 .blog-content h4 {
-  color: #F0F1F5;
+  color: #F2F0ED;
   font-weight: 700;
   line-height: 1.3;
 }
@@ -337,7 +270,7 @@ html { scroll-behavior: smooth; }
 .blog-content li  { margin-bottom: 0.4rem; }
 .blog-content li::marker { color: #00FF88; }
 
-.blog-content strong { color: #F0F1F5; font-weight: 600; }
+.blog-content strong { color: #F2F0ED; font-weight: 600; }
 .blog-content em     { color: #9DA5B4; font-style: italic; }
 
 .blog-content a {
@@ -391,7 +324,7 @@ html { scroll-behavior: smooth; }
   text-align: left;
   padding: 0.65rem 1rem;
   background: rgba(255,255,255,0.04);
-  color: #F0F1F5;
+  color: #F2F0ED;
   font-weight: 600;
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
@@ -415,14 +348,14 @@ html { scroll-behavior: smooth; }
 }
 
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: hsl(201,100%,6%); }
+::-webkit-scrollbar-track { background: hsl(220,13%,9%); }
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 255, 136, 0.25);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0, 255, 136, 0.5); }
 
-/* ── Radix UI animation utilities ──────────────────────────────────── */
+/* Radix UI animations */
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -473,33 +406,15 @@ html { scroll-behavior: smooth; }
 .slide-out-to-top-\[48\%\] { animation-name: slide-out-to-left-half; }
 .slide-in-from-top-\[48\%\] { animation-name: slide-in-from-left-half; }
 
-/* ── Typography: Inter as primary font ─────────────────────────────── */
-body {
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-  font-feature-settings: "cv11", "ss01";
-  font-variation-settings: "opsz" 32;
-}
-
-/* Display font utility — Instrument Serif (defi-mexico) */
-.font-display {
-  font-family: var(--font-instrument-serif), Georgia, serif;
-}
-
-/* Monospace numbers for financial data */
-.font-data {
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-variant-numeric: tabular-nums;
-}
-
-/* ── Improved focus ring ────────────────────────────────────────────── */
+/* Focus ring */
 :focus-visible {
   outline: 2px solid rgba(0, 255, 136, 0.5);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* ── Selection color ────────────────────────────────────────────────── */
+/* Selection */
 ::selection {
   background: rgba(0, 255, 136, 0.2);
-  color: #F0F1F5;
+  color: #F2F0ED;
 }

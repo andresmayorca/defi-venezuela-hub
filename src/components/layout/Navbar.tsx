@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -15,8 +15,6 @@ import { createClient } from "@/lib/supabase/client";
 
 /* ── Nav items ──────────────────────────────────────────────────────── */
 const ecosistemaItems = [
-  { href: "/startups", icon: Rocket, label: "Startups", desc: "Proyectos del ecosistema" },
-  { href: "/hackathon", icon: Trophy, label: "MVPs Hackathon", desc: "Proyectos de competencias" },
   { href: "/comunidades", icon: Users, label: "Comunidades", desc: "Discord, Telegram y más" },
   { href: "/empleos", icon: Briefcase, label: "Trabajos Web3", desc: "Cobra en USDC" },
   { href: "/protocolos", icon: BarChart3, label: "Protocolos DeFi", desc: "Los mejores para venezolanos" },
@@ -26,14 +24,10 @@ const aprendeItems = [
   { href: "/blog", icon: BookOpen, label: "Blog", desc: "Web3, DeFi, Tecnología y más" },
   { href: "/aprende", icon: GraduationCap, label: "Todos los tracks", desc: "Blockchain, DeFi, Web3 e IA" },
   { href: "/protocolos", icon: Globe, label: "Protocolos DeFi", desc: "Guías y comparativas" },
-  { href: "/academia", icon: Gamepad2, label: "Academia", desc: "Aprende jugando" },
 ];
 
 const agenticItems = [
-  { href: "/agentic-world", icon: Zap, label: "Deploy tu AI Room", desc: "Crea tu agente de trading" },
-  { href: "/agentic-world/bots", icon: Bot, label: "Bobby Agent", desc: "Agente trader inteligente" },
-  { href: "/agentic-world/forum", icon: MessageSquare, label: "Agent Debates", desc: "IA vs IA en el mercado" },
-  { href: "/agentic-world/intelligence", icon: ScanSearch, label: "Intelligence Protocol", desc: "Datos en tiempo real" },
+  { href: "/agentic-world", icon: Zap, label: "Pronto", desc: "Próximamente disponible" },
 ];
 
 const mainLinks = [
@@ -59,7 +53,7 @@ function NavDropdown({
       <button
         onClick={onToggle}
         className={cn(
-          "relative flex items-center gap-1 text-sm font-medium transition-colors group",
+          "flex items-center gap-1 text-sm font-medium transition-colors",
           isActive ? "text-[#00FF88]" : "text-white/60 hover:text-white"
         )}
       >
@@ -67,10 +61,6 @@ function NavDropdown({
         <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
           <ChevronDown className="w-3.5 h-3.5" />
         </motion.div>
-        <span className={cn(
-          "absolute -bottom-1 left-0 h-0.5 bg-[#00FF88] transition-all duration-300",
-          isActive ? "w-full" : "w-0 group-hover:w-full"
-        )} />
       </button>
 
       <AnimatePresence>
@@ -80,10 +70,12 @@ function NavDropdown({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute top-full left-0 mt-3 rounded-2xl border border-white/10 backdrop-blur-xl shadow-2xl shadow-black/40 py-2 overflow-hidden"
-            style={{ width: "17rem", background: "hsl(201,80%,5%,0.95)" }}
+            className="absolute top-full left-0 mt-2 rounded-lg border border-white/10 backdrop-blur-xl shadow-lg py-2 overflow-hidden"
+            style={{
+              width: "17rem",
+              background: "hsl(220, 13%, 11%)"
+            }}
           >
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00FF88]/30 to-transparent" />
             {items.map((item, i) => (
               <motion.div
                 key={item.href}
@@ -94,9 +86,9 @@ function NavDropdown({
                 <Link
                   href={item.href}
                   onClick={onToggle}
-                  className="flex items-start gap-3 px-4 py-3 hover:bg-white/5 transition-colors group"
+                  className="flex items-start gap-3 px-4 py-3 hover:bg-white/5 transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-[#00FF88]/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[#00FF88]/20 transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-[#00FF88]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <item.icon className="w-4 h-4 text-[#00FF88]" />
                   </div>
                   <div>
@@ -125,6 +117,7 @@ export default function Navbar() {
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const supabase = createClient();
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -137,12 +130,15 @@ export default function Navbar() {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    function handleClickOutside() {
-      setEcosistemaOpen(false);
-      setAprendeOpen(false);
-      setAgenticOpen(false);
-      setUserOpen(false);
-    }
+    const handleClickOutside = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setEcosistemaOpen(false);
+        setAprendeOpen(false);
+        setAgenticOpen(false);
+        setUserOpen(false);
+      }
+    };
+
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
@@ -170,57 +166,44 @@ export default function Navbar() {
     closeAll();
   };
 
-  /* breadcrumbs */
-  const pathSegments = pathname.split("/").filter(Boolean);
-  const showBreadcrumbs = pathSegments.length > 0;
-
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  const toggle = (which: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setEcosistemaOpen(which === "eco" ? !ecosistemaOpen : false);
-    setAprendeOpen(which === "apr" ? !aprendeOpen : false);
-    setAgenticOpen(which === "age" ? !agenticOpen : false);
-    setUserOpen(which === "usr" ? !userOpen : false);
+  const toggleDropdown = (type: "eco" | "apr" | "age" | "usr") => {
+    setEcosistemaOpen(type === "eco" ? !ecosistemaOpen : false);
+    setAprendeOpen(type === "apr" ? !aprendeOpen : false);
+    setAgenticOpen(type === "age" ? !agenticOpen : false);
+    setUserOpen(type === "usr" ? !userOpen : false);
   };
 
   return (
     <>
       <motion.header
+        ref={navRef}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          scrolled
-            ? "backdrop-blur-md border-b border-white/[0.06] shadow-sm"
-            : ""
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-white/10",
+          scrolled ? "backdrop-blur-md shadow-sm" : ""
         )}
-        style={{ background: scrolled ? "hsl(201,100%,6%,0.85)" : "hsl(201,100%,6%,0.95)" }}
+        style={{
+          background: scrolled ? "hsl(220, 13%, 9%, 0.9)" : "hsl(220, 13%, 9%, 0.95)"
+        }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={cn("flex items-center justify-between transition-all duration-300", scrolled ? "h-14" : "h-20")}>
             {/* Logo */}
-            <Link href="/" onClick={closeAll} className="flex items-center gap-3 group">
-              <motion.div
-                className="w-8 h-8 rounded-lg bg-[#00FF88] flex items-center justify-center"
-                whileHover={{ scale: 1.08, rotate: 5 }}
-                transition={{ duration: 0.2 }}
-              >
+            <Link href="/" onClick={closeAll} className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#00FF88] flex items-center justify-center">
                 <Zap className="w-4 h-4 text-black fill-black" />
-              </motion.div>
-              <motion.span
-                className={cn("font-bold text-white transition-all duration-300", scrolled ? "text-lg" : "text-xl")}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
+              </div>
+              <span className={cn("font-bold transition-all duration-300 text-white", scrolled ? "text-lg" : "text-xl")}>
                 DeFi<span className="text-[#00FF88]">Venezuela</span>
-              </motion.span>
+              </span>
             </Link>
 
             {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-7" onClick={(e) => e.stopPropagation()}>
+            <nav className="hidden md:flex items-center gap-7">
               <Link
                 href="/"
                 className={cn(
@@ -233,15 +216,15 @@ export default function Navbar() {
               </Link>
 
               <NavDropdown label="Ecosistema" items={ecosistemaItems} isOpen={ecosistemaOpen}
-                onToggle={() => toggle("eco", { stopPropagation: () => {} } as React.MouseEvent)}
+                onToggle={() => toggleDropdown("eco")}
                 isActive={ecosistemaItems.some(i => isActive(i.href))} />
 
               <NavDropdown label="Aprende" items={aprendeItems} isOpen={aprendeOpen}
-                onToggle={() => toggle("apr", { stopPropagation: () => {} } as React.MouseEvent)}
+                onToggle={() => toggleDropdown("apr")}
                 isActive={aprendeItems.some(i => isActive(i.href))} />
 
               <NavDropdown label="Agentic World" items={agenticItems} isOpen={agenticOpen}
-                onToggle={() => toggle("age", { stopPropagation: () => {} } as React.MouseEvent)}
+                onToggle={() => toggleDropdown("age")}
                 isActive={pathname.startsWith("/agentic-world")} />
 
               {mainLinks.map((link) => (
@@ -267,9 +250,9 @@ export default function Navbar() {
 
               {!loading && (
                 user ? (
-                  <div className="relative" onClick={(e) => e.stopPropagation()}>
+                  <div className="relative">
                     <button
-                      onClick={() => toggle("usr", { stopPropagation: () => {} } as React.MouseEvent)}
+                      onClick={() => toggleDropdown("usr")}
                       className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/8"
                     >
                       {user.user_metadata?.avatar_url ? (
@@ -291,10 +274,9 @@ export default function Navbar() {
                         <motion.div
                           variants={dropdownVariants}
                           initial="hidden" animate="visible" exit="exit"
-                          className="absolute top-full right-0 mt-2 w-48 rounded-2xl border border-white/10 backdrop-blur-xl shadow-2xl py-2"
-                          style={{ background: "hsl(201,80%,5%,0.95)" }}
+                          className="absolute top-full right-0 mt-2 w-48 rounded-lg border border-white/10 backdrop-blur-xl shadow-lg py-2"
+                          style={{ background: "hsl(220, 13%, 11%)" }}
                         >
-                          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#00FF88]/30 to-transparent" />
                           <Link href="/user" onClick={closeAll} className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors">
                             <User className="w-4 h-4 text-[#00FF88]" />
                             <span className="text-sm text-white">Mi perfil</span>
@@ -310,7 +292,7 @@ export default function Navbar() {
                 ) : (
                   <Link
                     href="/unirse"
-                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-black text-sm font-bold bg-[#00FF88] hover:bg-[#00e67a] transition-all hover:scale-[1.03]"
+                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-lg text-black text-sm font-bold bg-[#00FF88] hover:bg-[#00e67a] transition-colors"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Únete
@@ -343,33 +325,6 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Breadcrumbs */}
-        {showBreadcrumbs && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="border-t border-white/[0.04] backdrop-blur-sm"
-            style={{ background: "hsl(201,100%,6%,0.5)" }}
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-              <nav className="flex items-center gap-2 text-xs text-white/40">
-                <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-                {pathSegments.map((seg, i) => (
-                  <span key={i} className="flex items-center gap-2">
-                    <ChevronDown className="w-3 h-3 -rotate-90" />
-                    <Link
-                      href={"/" + pathSegments.slice(0, i + 1).join("/")}
-                      className={cn("hover:text-white transition-colors capitalize", i === pathSegments.length - 1 && "text-white font-medium")}
-                    >
-                      {seg.replace(/-/g, " ")}
-                    </Link>
-                  </span>
-                ))}
-              </nav>
-            </div>
-          </motion.div>
-        )}
       </motion.header>
 
       {/* ── Mobile overlay + slide-from-right drawer ─────────────────── */}

@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/Badge";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import { FadeIn, SlideUp, StaggerContainer, StaggerItem } from "@/components/ui/motion";
+import { LatestBlogClient } from "@/components/sections/LatestBlogClient";
 import { toast } from "sonner";
 
 /* ── Ecosystem module cards ─────────────────────────────────────────── */
@@ -19,7 +20,7 @@ const modules = [
     icon: Rocket,
     title: "Startups & Proyectos",
     description: "Los mejores proyectos DeFi construidos por venezolanos. Conoce el ecosistema en crecimiento.",
-    href: "/startups",
+    href: "/startup",
     color: "text-white/60",
     bg: "bg-white/[0.05]",
     span: "md:col-span-2",
@@ -328,42 +329,7 @@ export default function HomePage() {
         </section>
 
         {/* ── Blog / Aprende ─────────────────────────────────────────── */}
-        <section className="py-16 px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl md:text-3xl font-display text-white">Lo último del hub</h2>
-              <Link href="/blog" className="text-sm text-white/60 hover:text-white transition-colors flex items-center gap-1">
-                Ver más <ArrowRight size={14} />
-              </Link>
-            </div>
-
-            {/* Placeholder cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                { tag: "DeFi", title: "Cómo usar USDC para protegerte de la inflación en Venezuela", time: "5 min", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-                { tag: "Web3", title: "Los mejores protocolos DeFi para venezolanos en 2025", time: "8 min", color: "bg-violet-500/10 text-violet-400 border-violet-500/20" },
-                { tag: "IA", title: "Cómo crear tu primer agente de IA para trading en 10 pasos", time: "12 min", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-              ].map((post) => (
-                <Link key={post.title} href="/blog">
-                  <GlassCard className="overflow-hidden group">
-                    <div className="h-36 bg-white/[0.02] flex items-center justify-center">
-                      <BookOpen className="text-white/10" size={40} />
-                    </div>
-                    <div className="p-5 space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Badge className={`border text-[10px] ${post.color}`}>{post.tag}</Badge>
-                        <span className="text-[10px] text-white/20">{post.time}</span>
-                      </div>
-                      <h3 className="text-base font-display text-white group-hover:text-[#00FF88] transition-colors line-clamp-2">
-                        {post.title}
-                      </h3>
-                    </div>
-                  </GlassCard>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <LatestBlogClient />
 
         {/* ── Metrics CTA ────────────────────────────────────────────── */}
         <section className="py-12 px-6">
